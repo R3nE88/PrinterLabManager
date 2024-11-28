@@ -1,0 +1,30 @@
+{% extends 'produccion/base.html' %}
+
+{% block content %}
+    <div class="content">
+        <!-- Contenido dinámico que cambia según el valor de 'screen' -->
+        <div id="content-area">
+            {% if screen == 'calculadora_produccion' %}
+                {% include 'produccion/calculadora.html' %}
+            {% elif screen == 'control_produccion' %}
+                {% include 'produccion/control.html' %}
+            {% elif screen == 'gestion_materiales' %}
+                {% include 'produccion/gestion.html' %}
+            {% elif screen == 'control_ingresos_egresos' %}
+                {% include 'produccion/ingresos.html' %}
+            {% elif screen == 'pedidos' %}
+                {% include 'produccion/pedidos.html' %}
+            {% elif screen == 'precios' %}
+                {% include 'produccion/precios.html' %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    // Si necesitas realizar alguna acción con JavaScript al cambiar la pantalla,
+    // puedes colocarla aquí, por ejemplo, para manipular el contenido dinámicamente.
+</script>
+{% endblock %}

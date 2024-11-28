@@ -1,0 +1,253 @@
+{% block content %}
+<style>
+    /* General table styles */
+    table {
+        margin: 0 auto;
+        border-collapse: collapse;
+        width: 90%;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #4eaeff;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f9f9f9;
+    }
+
+    /* Button styles */
+    .btn {
+        padding: 6px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .btn.edit { background-color: #dcaf14 }
+    .btn.edit:hover { background-color: #d3a402; }
+
+    .btn.delete { background-color: #dc3545; }
+    .btn.delete:hover { background-color: #c82333; }
+
+    .btn.add { background-color: #4eaeff; margin: 5px 0; }
+    .btn.add:hover { background-color: #3498db; }
+
+    .btn.cancel { background-color: #f44336; }
+
+    .btn.save { background-color: #4CAF50; }
+
+    /* Form styles */
+    .hidden { display: none; }
+    .form-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-inline input {
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+</style>
+
+<!-- TABLA DE FILAMENTOS -->
+<h1>Gestion de materiales y filamento (Inventario)</h1>
+<div id="tabla-filamentos">
+    <h3>Lista de Filamentos</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Tipo</th>
+                <th>Color</th>
+                <th>Unidades</th>
+                <th>Gramos Restantes</th>
+                <th>Valor/Unidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for filamento in filamentos %}
+                <!-- Fila normal de la tabla (oculta cuando estamos editando) -->
+                <tr id="fila-filamento-{{ filamento.id }}">
+                    <td>{{ filamento.marca }}</td>
+                    <td>{{ filamento.tipo }}</td>
+                    <td>{{ filamento.color }}</td>
+                    <td>{{ filamento.cantidad }}</td>
+                    <td>{{ filamento.restante }}g</td>
+                    <td>{{ filamento.valor }}$</td>
+                    <td>
+                        <button class="btn edit" onclick="mostrarFormularioInline('filamento', '{{ filamento.id }}')">Editar</button>
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="filamento_id" value="{{ filamento.id }}">
+                            <button type="submit" name="eliminar_filamento" class="btn delete">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% include "produccion/partials/form_editar_filamento.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <button class="btn add" onclick="mostrarFormulario('filamento-form', 'tabla-filamentos')">Agregar Filamento</button>
+    </div>
+</div>
+
+<!-- FORMULARIO DE FILAMENTO -->
+<div id="filamento-form" class="hidden">
+    <h3>Agregar Filamento</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ filamento_form.as_p }}
+        <button type="submit" name="nuevo_filamento" class="btn add">Guardar Filamento</button>
+    </form>
+    <button onclick="ocultarFormulario('filamento-form', 'tabla-filamentos')" class="btn cancel">Cancelar</button>
+</div>
+
+<!-- TABLA DE MATERIALES -->
+<div id="tabla-materiales">
+    <h3>Lista de Materiales</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Material</th>
+                <th>Valor</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for material in materiales %}
+            <tr id="fila-material-{{ material.id }}">
+                <td>{{ material.material }}</td>
+                <td>{{ material.valor }}$</td>
+                <td>
+                    <button class="btn edit" onclick="mostrarFormularioInline('material', '{{ material.id }}')">Editar</button>
+                    <form method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="material_id" value="{{ material.id }}">
+                        <button type="submit" name="eliminar_material" class="btn delete">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% include "produccion/partials/form_editar_material.html" %}
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <button class="btn add" onclick="mostrarFormulario('material-form', 'tabla-materiales')">Agregar Material</button>
+    </div>
+</div>
+
+<!-- FORMULARIO DE MATERIAL -->
+<div id="material-form" class="hidden">
+    <h3>Agregar Material</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ material_form.as_p }}
+        <button type="submit" name="nuevo_material" class="btn add">Guardar Material</button>
+    </form>
+    <button onclick="ocultarFormulario('material-form', 'tabla-materiales')" class="btn cancel">Cancelar</button>
+</div>
+
+<script>
+    function confirmarEliminacion(url) {
+        if (confirm("¿Estás seguro de que deseas eliminar este elemento?")) {
+            window.location.href = url;
+        }
+    }
+    function mostrarFormulario(formId, tablaId) {
+        document.getElementById(formId).classList.remove('hidden');
+        document.getElementById(tablaId).classList.add('hidden');
+    }
+
+    function ocultarFormulario(formId, tablaId) {
+        document.getElementById(formId).classList.add('hidden');
+        document.getElementById(tablaId).classList.remove('hidden');
+    }
+
+    function ocultarFormularioInline(type, id) {
+        document.getElementById(`editar-form-${type}-${id}`).classList.add('hidden');
+    }
+
+    // Función para mostrar el formulario y ocultar la fila de edición
+    function mostrarFormularioInline(type, id) {
+        // Ocultar la fila original (que está siendo editada)
+        const row = document.getElementById(`fila-${type}-${id}`);
+        if (row) {
+            row.classList.add('hidden');
+        }
+
+        // Mostrar el formulario de edición
+        const formRow = document.getElementById(`editar-form-${type}-${id}`);
+        if (formRow) {
+            formRow.classList.remove('hidden');
+        }
+    }
+
+    // Función para cancelar la edición y mostrar la fila original
+    function cancelarEdicion(type, id) {
+        // Ocultar el formulario de edición
+        const formRow = document.getElementById(`editar-form-${type}-${id}`);
+        if (formRow) {
+            formRow.classList.add('hidden');
+        }
+
+        // Mostrar la fila original
+        const row = document.getElementById(`fila-${type}-${id}`);
+        if (row) {
+            row.classList.remove('hidden');
+        }
+    }
+
+    // Función para actualizar la fila con los nuevos valores
+    function actualizarFila(type, id) {
+        // Obtener los nuevos valores del formulario
+        const fila = document.getElementById(`editar-form-${type}-${id}`).querySelectorAll('input');
+        const values = {};
+        fila.forEach(input => {
+            values[input.name] = input.value;
+        });
+    
+        // Actualizar la fila original con los nuevos valores dependiendo del tipo (Filamento o Material)
+        const row = document.getElementById(`fila-${type}-${id}`);
+        if (row) {
+            if (type === 'filamento') {
+                // Para filamento, actualizamos los valores de la fila
+                row.querySelector('.marca').innerText = values['marca'];
+                row.querySelector('.tipo').innerText = values['tipo'];
+                row.querySelector('.cantidad').innerText = values['cantidad'];
+                row.querySelector('.color').innerText = values['color'];
+                row.querySelector('.restante').innerText = values['restante'];
+                row.querySelector('.valor').innerText = values['valor'];
+            } else if (type === 'material') {
+                // Para material, actualizamos el nombre y el valor
+                row.querySelector('.material').innerText = values['material'];
+                row.querySelector('.valor').innerText = values['valor'];
+            }
+            row.classList.remove('hidden');
+        }
+    
+        // Ocultar el formulario de edición
+        const formRow = document.getElementById(`editar-form-${type}-${id}`);
+        if (formRow) {
+            formRow.classList.add('hidden');
+        }
+    
+        return false;  // Evitar el envío del formulario si solo quieres actualizar la fila
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+<tr id="editar-form-material-{{ material.id }}" class="hidden">
+    <td colspan="3">
+        <form method="POST" class="form-inline" onsubmit="return actualizarFila('material', {{ material.id }})"> 
+            {% csrf_token %}
+            <input type="hidden" name="material_id" value="{{ material.id }}">
+
+            <label>Nombre: <input type="text" name="material" value="{{ material.material }}"></label>
+            <label>Valor: <input name="valor" value="{{ material.valor }}"></label>
+
+            <button type="submit" name="editar_material" class="btn save">Guardar</button>
+            <button type="button" class="btn cancel" onclick="cancelarEdicion('material', '{{ material.id }}')">Cancelar</button>
+        </form>
+    </td>
+</tr>

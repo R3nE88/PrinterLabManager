@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producción</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Asegura que el contenido ocupe toda la pantalla */
+            font-family: Arial, sans-serif;
+        }
+    
+        body {
+            display: flex;
+            flex-direction: row; /* Organiza el contenido en filas */
+        }
+    
+        .content {
+            flex: 1; /* Ocupa todo el espacio disponible en el lado izquierdo */
+            padding: 5px;
+            overflow-y: auto; /* Permite desplazamiento si el contenido es muy largo */
+        }
+    
+        .sidebar {
+            width: 20%;
+            background-color: #4eaeff; /* El color que elegiste */
+            display: flex;
+            flex-direction: column; /* Organiza los elementos de arriba a abajo */
+            justify-content: flex-start; /* Empuja los elementos hacia arriba */
+            align-items: center; /* Centra los elementos horizontalmente */
+            height: 100vh; /* Asegura que la barra lateral ocupe toda la altura de la pantalla */
+            padding: 20px;
+            box-sizing: border-box; /* Incluye el padding dentro del ancho/alto */
+            overflow-y: auto; /* Evita que se desborde verticalmente */
+        }
+    
+        .nav-buttons {
+            display: flex;
+            flex-direction: column; /* Los botones estarán uno debajo del otro */
+            align-items: right; /* Centra los botones horizontalmente */
+            width: 100%; /* Asegura que los botones ocupen el ancho completo de la barra lateral */
+        }
+    
+        .nav-buttons button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            width: 100%; /* Ajusta el ancho de los botones */
+            text-align: center; /* Centra el texto del botón */
+        }
+    
+        .nav-buttons button:hover {
+            background-color: #0056b3;
+        }
+    
+        .logo {
+            margin-bottom: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Cambia la disposición a columnas para pantallas pequeñas */
+            }
+    
+            .sidebar {
+                width: 100%; /* Ocupa el ancho completo */
+                border-left: none;
+                border-bottom: 2px solid #ccc;
+            }
+    
+            .nav-buttons button {
+                width: 100%; /* Los botones ocupan todo el ancho en dispositivos pequeños */
+            }
+        }
+    
+        @media (max-width: 480px) {
+            .nav-buttons button {
+                font-size: 14px; /* Reduce el tamaño del texto en pantallas más pequeñas */
+                padding: 8px 15px;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="sidebar">
+        <img src="{% static 'produccion/logo.png' %}" alt="Logo" class="logo" width="100">
+        <div class="nav-buttons">
+            <a href="/manager?screen=calculadora_produccion"><button>Calculadora de Producción</button></a>
+            <a href="/manager?screen=control_produccion"><button>Control de Producción</button></a>
+            <a href="/manager?screen=gestion_materiales"><button>Gestión de Materiales</button></a>
+            <a href="/manager?screen=control_ingresos_egresos"><button>Control de Ingresos y Egresos</button></a>
+            <a href="/manager?screen=pedidos"><button>Pedidos</button></a>
+            <a href="/manager?screen=precios"><button>Precios</button></a>
+        </div>
+    </div>
+    <div class="content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

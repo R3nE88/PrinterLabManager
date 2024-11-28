@@ -1,0 +1,19 @@
+<!-- Fila oculta para el formulario de edición -->
+<tr id="editar-form-filamento-{{ filamento.id }}" class="hidden">
+    <td colspan="7">
+        <form method="POST" class="form-inline" onsubmit="return actualizarFila('filamento', {{ filamento.id }})">
+            {% csrf_token %}
+            <input type="hidden" name="filamento_id" value="{{ filamento.id }}">
+
+            <label>Marca: <input type="text" name="marca" value="{{ filamento.marca }}"></label>
+            <label>Tipo: <input type="text" name="tipo" value="{{ filamento.tipo }}"></label>
+            <label>Color: <input type="text" name="color" value="{{ filamento.color }}"></label>
+            <label>Cantidad: <input name="cantidad" value="{{ filamento.cantidad }}"></label>
+            <label>Restante: <input name="restante" value="{{ filamento.restante }}"></label>
+            <label>Valor: <input name="valor" value="{{ filamento.valor }}"></label>
+
+            <button type="submit" name="editar_filamento" class="btn save">Guardar</button>
+            <button type="button" class="btn cancel" onclick="cancelarEdicion('filamento', {{ filamento.id }})">Cancelar</button>
+        </form>
+    </td>
+</tr>
