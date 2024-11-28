@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Filamento, Material
+from .models import Filamento, Material, CalculadoraProduccion
 from .forms import FilamentoForm, MaterialForm
+
 
 
 # Función principal del manager
@@ -18,7 +19,6 @@ def manager(request):
 
     # Pantalla por defecto
     return render(request, 'produccion/manager.html', context)
-
 
 # Subfunción para gestionar materiales y filamentos
 def gestionar_materiales(request, context):
@@ -73,7 +73,6 @@ def gestionar_materiales(request, context):
     })
     return render(request, 'produccion/manager.html', context)
 
-
 # CRUD para Filamentos
 def editar_filamento(request):
     filamento_id = request.POST.get("filamento_id")
@@ -84,13 +83,11 @@ def editar_filamento(request):
         filamento_form.save()
     return redirect('/manager/?screen=gestion_materiales')
 
-
 def eliminar_filamento(request):
     filamento_id = request.POST.get("filamento_id")
     filamento = get_object_or_404(Filamento, id=filamento_id)
     filamento.delete()
     return redirect('/manager/?screen=gestion_materiales')
-
 
 # CRUD para Materiales
 def editar_material(request):
@@ -101,7 +98,6 @@ def editar_material(request):
     if material_form.is_valid():
         material_form.save()
     return redirect('/manager/?screen=gestion_materiales')
-
 
 def eliminar_material(request):
     material_id = request.POST.get("material_id")

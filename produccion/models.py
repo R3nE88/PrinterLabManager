@@ -17,3 +17,14 @@ class Material(models.Model):
 
     def __str__(self):
         return self.material
+    
+class CalculadoraProduccion(models.Model):
+    fecha = models.DateField()
+    producto = models.CharField(max_length=100)
+    peso = models.FloatField()
+    tiempo = models.FloatField()
+    filamento = models.CharField(max_length=100)
+    costo = models.FloatField()
+
+    def __str__(self):
+        return self.producto
