@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Filamento, Material, CalculadoraProduccion
-from .forms import FilamentoForm, MaterialForm
-
-
+from produccion.models import Filamento, Material
+from produccion.forms import FilamentoForm, MaterialForm
 
 # Función principal del manager
-def manager(request):
+'''def manager(request):
     screen = request.GET.get('screen', 'calculadora_produccion')  # Pantalla actual
     context = {'screen': screen}
 
@@ -19,7 +17,7 @@ def manager(request):
 
     # Pantalla por defecto
     return render(request, 'produccion/manager.html', context)
-
+'''
 # Subfunción para gestionar materiales y filamentos
 def gestionar_materiales(request, context):
     # Obtener datos de Filamentos y Materiales

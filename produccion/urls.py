@@ -1,7 +1,7 @@
 from django.urls import path
-from produccion import views
+from produccion.views.manager import manager
 
 urlpatterns = [
-    path('manager/', views.manager, name='manager'),
+    path('manager/', manager, name='manager'),
     #path('produccion/gestion_materiales/', views.gestion_materiales, name='gestion_materiales'),  # Nueva URL
 ]
