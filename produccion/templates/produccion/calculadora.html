@@ -4,5 +4,116 @@
 
 <!-- TABLA DE Calculadora -->
 <h1>Calculadora de produccion</h1>
+<div id="tabla-calculadora">
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Producto</th>
+                <th>Filamento</th>
+                <th>Peso</th>
+                <th>Tiempo</th>
+                <th>Costo de produccion</th>
+            </tr>
+        </thread>
+        <tbody>
+            {%for calculo in calculadora %}
+                <tr id="fila-calculo-{{ calculo.id }}">
+                    <td>{{ calculo.fecha }}</td>
+                    <td>{{ calculo.producto }}</td>
+                    <td>{{ calculo.filamento }}</td>
+                    <td>{{ calculo.peso }}</td>
+                    <td>{{ calculo.tiempo }}</td>
+                    <td>{{ calculo.costo }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center;">
+        <button class="btn add" onclick="mostrarFormulario('calculo-form', 'tabla-calculadora')">Agregar Filamento</button>
+    </div>
+</div>
 
+<!-- FORMULARIO DE FILAMENTO -->
+<div id="calculo-form" class="hidden">
+    <h3>Calcular:</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ calculo_form.as_p }}
+        <button type="submit" name="nuevo_calculo" class="btn add">Guardar Filamento</button>
+    </form>
+    <button onclick="ocultarFormulario('calculo-form', 'tabla-calculo')" class="btn cancel">Cancelar</button>
+</div>
+
+<script>
+    function mostrarFormulario(formId, tablaId) {
+        document.getElementById(formId).classList.remove('hidden');
+        document.getElementById(tablaId).classList.add('hidden');
+    }
+
+    function ocultarFormulario(formId, tablaId) {
+        document.getElementById(formId).classList.add('hidden');
+        document.getElementById(tablaId).classList.remove('hidden');
+    }
+
+    // Función para mostrar el formulario y ocultar la fila de edición
+    function mostrarFormularioInline(type, id) {
+        // Ocultar la fila original (que está siendo editada)
+        const row = document.getElementById(`fila-${type}-${id}`);
+        if (row) {
+            row.classList.add('hidden');
+        }
+
+        // Mostrar el formulario de edición
+        const formRow = document.getElementById(`editar-form-${type}-${id}`);
+        if (formRow) {
+            formRow.classList.remove('hidden');
+        }
+    }
+
+    // Función para cancelar la edición y mostrar la fila original
+    function cancelarEdicion(type, id) {
+        // Ocultar el formulario de edición
+        const formRow = document.getElementById(`editar-form-${type}-${id}`);
+        if (formRow) {
+            formRow.classList.add('hidden');
+        }
+
+        // Mostrar la fila original
+        const row = document.getElementById(`fila-${type}-${id}`);
+        if (row) {
+            row.classList.remove('hidden');
+        }
+    }
+
+    // Función para actualizar la fila con los nuevos valores
+    function actualizarFila(type, id) {
+        // Obtener los nuevos valores del formulario
+        const fila = document.getElementById(`editar-form-${type}-${id}`).querySelectorAll('input');
+        const values = {};
+        fila.forEach(input => {
+            values[input.name] = input.value;
+        });
+    
+        // Actualizar la fila original con los nuevos valores dependiendo del tipo (Filamento o Material)
+        const row = document.getElementById(`fila-${type}-${id}`);
+        if (row) {
+            row.querySelector('.fecha').innerText = values['fecha'];
+            row.querySelector('.producto').innerText = values['producto'];
+            row.querySelector('.filamento').innerText = values['filamento'];
+            row.querySelector('.peso').innerText = values['peso'];
+            row.querySelector('.tiempo').innerText = values['tiempo'];
+            row.querySelector('.costo').innerText = values['costo'];
+            row.classList.remove('hidden');
+        }
+    
+        // Ocultar el formulario de edición
+        const formRow = document.getElementById(`editar-form-${type}-${id}`);
+        if (formRow) {
+            formRow.classList.add('hidden');
+        }
+    
+        return false;  // Evitar el envío del formulario si solo quieres actualizar la fila
+    }
+</script>
 {% endblock %}

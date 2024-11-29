@@ -2,23 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from produccion.models import Filamento, Material
 from produccion.forms import FilamentoForm, MaterialForm
 
-# Función principal del manager
-'''def manager(request):
-    screen = request.GET.get('screen', 'calculadora_produccion')  # Pantalla actual
-    context = {'screen': screen}
-
-    # Gestión de materiales y filamentos
-    if screen == "gestion_materiales":
-        return gestionar_materiales(request, context)
-
-    # Agregar más pantallas aquí
-    # if screen == "otra_pantalla":
-    #     return otra_funcion(request, context)
-
-    # Pantalla por defecto
-    return render(request, 'produccion/manager.html', context)
-'''
-# Subfunción para gestionar materiales y filamentos
+# gestionar materiales y filamentos
 def gestionar_materiales(request, context):
     # Obtener datos de Filamentos y Materiales
     filamentos = Filamento.objects.all()

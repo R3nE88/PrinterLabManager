@@ -103,11 +103,6 @@
 </div>
 
 <script>
-    function confirmarEliminacion(url) {
-        if (confirm("¿Estás seguro de que deseas eliminar este elemento?")) {
-            window.location.href = url;
-        }
-    }
     function mostrarFormulario(formId, tablaId) {
         document.getElementById(formId).classList.remove('hidden');
         document.getElementById(tablaId).classList.add('hidden');
@@ -116,10 +111,6 @@
     function ocultarFormulario(formId, tablaId) {
         document.getElementById(formId).classList.add('hidden');
         document.getElementById(tablaId).classList.remove('hidden');
-    }
-
-    function ocultarFormularioInline(type, id) {
-        document.getElementById(`editar-form-${type}-${id}`).classList.add('hidden');
     }
 
     // Función para mostrar el formulario y ocultar la fila de edición
