@@ -18,8 +18,8 @@ class Material(models.Model):
     def __str__(self):
         return self.material
     
-class CalculadoraProduccion(models.Model):
-    fecha = models.DateField()
+class Calculo(models.Model):
+    fecha = models.CharField(max_length=100) #models.DateField()
     producto = models.CharField(max_length=100)
     filamento = models.CharField(max_length=100)
     peso = models.FloatField()

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Filamento, Material, CalculadoraProduccion
+from .models import Filamento, Material, Calculo
 
 class FilamentoForm(forms.ModelForm):
     class Meta:
@@ -13,5 +13,5 @@ class MaterialForm(forms.ModelForm):
 
 class CalculoForm(forms.ModelForm):
     class Meta:
-        model = CalculadoraProduccion
+        model = Calculo
         fields = ['fecha', 'producto', 'filamento', 'peso', 'tiempo', 'costo']

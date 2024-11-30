@@ -25,6 +25,7 @@ def gestionar_materiales(request, context):
 
         if "nuevo_filamento" in request.POST and filamento_form.is_valid():
             filamento_form.save()
+            print(request.POST)
             return redirect('/manager/?screen=gestion_materiales')
 
         if "editar_material" in request.POST:
