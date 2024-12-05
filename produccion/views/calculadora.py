@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from produccion.models import Calculo
 from produccion.forms import CalculoForm
 
+'''
 def calculadora_produccion(request, context):
     # Obtener datos
     calculadora = Calculo.objects.all()
@@ -45,3 +46,25 @@ def eliminar_calculo(request):
     calculo = get_object_or_404(calculo, id=calculo_id)
     calculo.delete()
     return redirect('/manager/?screen=calculadora_produccion')
+    '''
+
+
+def calculadora_produccion(request, context):
+    if request.method == 'POST':
+        form = CalculoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/manager/?screen=calculadora_produccion')  # Redirige a la misma página tras guardar
+    else:
+        form = CalculoForm()
+
+    calculos = Calculo.objects.all()  # Obtén todos los cálculos para la tabla
+
+    # Actualizar el contexto y renderizar
+    context.update({
+        'calculadora': calculos,
+        'calculo_form': form,
+    })
+
+    return render(request, 'produccion/manager.html', context)
+    

@@ -13,7 +13,7 @@
                 <th>Filamento</th>
                 <th>Peso</th>
                 <th>Tiempo</th>
-                <th>Costo de produccion</th>
+                <th>Costo</th>
             </tr>
         </thread>
         <tbody>
@@ -22,9 +22,9 @@
                     <td>{{ calculo.fecha }}</td>
                     <td>{{ calculo.producto }}</td>
                     <td>{{ calculo.filamento }}</td>
-                    <td>{{ calculo.peso }}</td>
-                    <td>{{ calculo.tiempo }}</td>
-                    <td>{{ calculo.costo }}</td>
+                    <td>{{ calculo.peso }}g</td>
+                    <td>{{ calculo.tiempo }} minutos</td>
+                    <td>{{ calculo.costo }}Dlls$</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -40,7 +40,7 @@
     <form method="post">
         {% csrf_token %}
         {{ calculo_form.as_p }}
-        <button type="submit" name="nuevo_calculo" class="btn add">Guardar Filamento</button>
+        <button type="submit" name="nuevo_calculo" class="btn add">Calcular</button>
     </form>
     <button onclick="ocultarFormulario('calculo-form', 'tabla-calculadora')" class="btn cancel">Cancelar</button>
 </div>
