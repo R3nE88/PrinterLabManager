@@ -1,0 +1,26 @@
+<!-- Fila oculta para el formulario de edición -->
+<tr id="editar-form-calculo-{{ calculo.id }}" class="hidden">
+    <td colspan="7">
+        <form method="POST" class="form-inline" onsubmit="return actualizarFila('calculo', {{ calculo.id }})">
+            {% csrf_token %}
+            <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
+
+            <label>Producto: <input type="text" name="producto" value="{{ calculo.producto }}"></label>
+            <label>Filamento:
+                <select name="filamento" style="width: 200px;"> <!-- Cambia el ancho aquí -->
+                    {% for filamento in filamentos %}
+                        <option value="{{ filamento.id }}" {% if filamento.id == calculo.filamento.id %}selected{% endif %}>
+                            {{ filamento.marca|default:"(vacío)" }} {{filamento.tipo}} {{filamento.color}}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            
+            <label>Peso(g): <input type="text" name="peso" value="{{ calculo.peso }}"></label>
+            <label>Tiempo(m): <input type="text" name="tiempo" value="{{ calculo.tiempo }}"></label>
+
+            <button type="submit" name="editar_calculo" class="btn save">Guardar</button>
+            <button type="button" class="btn cancel" onclick="cancelarEdicion('calculo', {{ calculo.id }})">Cancelar</button>
+        </form>
+    </td>
+</tr>

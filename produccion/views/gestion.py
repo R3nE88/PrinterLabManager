@@ -15,27 +15,14 @@ def gestionar_materiales(request, context):
     # Procesar formularios de agregar/editar
     if request.method == "POST":
         if "editar_filamento" in request.POST:
-            filamento_id = request.POST.get("filamento_id")
-            filamento = get_object_or_404(Filamento, id=filamento_id)
-
-            filamento_form = FilamentoForm(request.POST, instance=filamento)
-            if filamento_form.is_valid():
-                filamento_form.save()
-                return redirect('/manager/?screen=gestion_materiales')
+            return editar_filamento(request)
 
         if "nuevo_filamento" in request.POST and filamento_form.is_valid():
             filamento_form.save()
-            print(request.POST)
             return redirect('/manager/?screen=gestion_materiales')
 
         if "editar_material" in request.POST:
-            material_id = request.POST.get("material_id")
-            material = get_object_or_404(Material, id=material_id)
-
-            material_form = MaterialForm(request.POST, instance=material)
-            if material_form.is_valid():
-                material_form.save()
-                return redirect('/manager/?screen=gestion_materiales')
+            return editar_material(request)
 
         if "nuevo_material" in request.POST and material_form.is_valid():
             material_form.save()
@@ -56,15 +43,14 @@ def gestionar_materiales(request, context):
     })
     return render(request, 'produccion/manager.html', context)
 
-# CRUD para Filamentos
 def editar_filamento(request):
     filamento_id = request.POST.get("filamento_id")
     filamento = get_object_or_404(Filamento, id=filamento_id)
-    filamento_form = FilamentoForm(request.POST, instance=filamento)
 
+    filamento_form = FilamentoForm(request.POST, instance=filamento)
     if filamento_form.is_valid():
         filamento_form.save()
-    return redirect('/manager/?screen=gestion_materiales')
+        return redirect('/manager/?screen=gestion_materiales')
 
 def eliminar_filamento(request):
     filamento_id = request.POST.get("filamento_id")
@@ -72,15 +58,14 @@ def eliminar_filamento(request):
     filamento.delete()
     return redirect('/manager/?screen=gestion_materiales')
 
-# CRUD para Materiales
 def editar_material(request):
     material_id = request.POST.get("material_id")
     material = get_object_or_404(Material, id=material_id)
-    material_form = MaterialForm(request.POST, instance=material)
 
+    material_form = MaterialForm(request.POST, instance=material)
     if material_form.is_valid():
         material_form.save()
-    return redirect('/manager/?screen=gestion_materiales')
+        return redirect('/manager/?screen=gestion_materiales')
 
 def eliminar_material(request):
     material_id = request.POST.get("material_id")

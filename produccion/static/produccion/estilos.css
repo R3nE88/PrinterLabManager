@@ -37,6 +37,9 @@ tr:hover {
 .btn.add { background-color: #4eaeff; margin: 5px 0; }
 .btn.add:hover { background-color: #3498db; }
 
+.btn.money { background-color: #31be0d; margin: 5px 0; }
+.btn.money:hover { background-color: #28b80b; }
+
 .btn.cancel { background-color: #f44336; }
 
 .btn.save { background-color: #4CAF50; }

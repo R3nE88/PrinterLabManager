@@ -3,7 +3,9 @@
 <link rel="stylesheet" href="{% static 'produccion/estilos.css' %}">
 
 <!-- TABLA DE Calculadora -->
-<h1>Calculadora de produccion</h1>
+<h1 style="display: inline-block; margin-right: 20px;">Calculadora de produccion</h1>
+<button style="display: inline-block;" class="btn money" id="columna-costo" onclick="cambiarMoneda()">Dlls$</button>
+
 <div id="tabla-calculadora">
     <table>
         <thead>
@@ -14,6 +16,7 @@
                 <th>Peso</th>
                 <th>Tiempo</th>
                 <th>Costo</th>
+                <th>Acciones</th>
             </tr>
         </thread>
         <tbody>
@@ -24,8 +27,17 @@
                     <td>{{ calculo.filamento }}</td>
                     <td>{{ calculo.peso }}g</td>
                     <td>{{ calculo.tiempo }} minutos</td>
-                    <td>{{ calculo.costo }}Dlls$</td>
+                    <td class="costo" data-costo-dlls="{{ calculo.costo }}">{{ calculo.costo }} Dlls$</td>
+                    <td>
+                        <button class="btn edit" onclick="mostrarFormularioInline('calculo', '{{ calculo.id }}')">Editar</button>
+                        <form method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
+                            <button type="submit" name="eliminar_calculo" class="btn delete">Eliminar</button>
+                        </form>
+                    </td>
                 </tr>
+            {% include "produccion/partials/form_editar_calculo.html" %}
             {% endfor %}
         </tbody>
     </table>
@@ -34,7 +46,7 @@
     </div>
 </div>
 
-<!-- FORMULARIO DE FILAMENTO -->
+<!-- FORMULARIO -->
 <div id="calculo-form" class="hidden">
     <h3>Calcular:</h3>
     <form method="post">
@@ -46,6 +58,30 @@
 </div>
 
 <script>
+    let enDolares = true; // Estado inicial: mostrar en dólares
+    const tipoCambio = 20.30; // Tipo de cambio: 1 USD = 20 MXN
+
+    function cambiarMoneda() {
+        enDolares = !enDolares; // Cambia el estado
+        const celdasCosto = document.querySelectorAll('.costo');
+        
+        celdasCosto.forEach(celda => {
+            const costoDolares = parseFloat(celda.getAttribute('data-costo-dlls'));
+            if (enDolares) {
+                celda.textContent = `${costoDolares.toFixed(2)} Dlls$`;
+            } else {
+                const costoPesos = costoDolares * tipoCambio;
+                celda.textContent = `${costoPesos.toFixed(2)} MXN$`;
+            }
+        });
+
+        // Actualiza el encabezado para reflejar el estado actual
+        const columnaCosto = document.getElementById('columna-costo');
+        columnaCosto.textContent = enDolares 
+            ? 'Dlls$' 
+            : 'MXN$';
+    }
+
     function mostrarFormulario(formId, tablaId) {
         document.getElementById(formId).classList.remove('hidden');
         document.getElementById(tablaId).classList.add('hidden');

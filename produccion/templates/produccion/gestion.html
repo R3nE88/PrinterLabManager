@@ -27,7 +27,7 @@
                     <td>{{ filamento.color }}</td>
                     <td>{{ filamento.cantidad }}</td>
                     <td>{{ filamento.restante }}g</td>
-                    <td>{{ filamento.valor }}$</td>
+                    <td>{{ filamento.valor }}Dlls$</td>
                     <td>
                         <button class="btn edit" onclick="mostrarFormularioInline('filamento', '{{ filamento.id }}')">Editar</button>
                         <form method="POST" style="display:inline;">
@@ -72,7 +72,7 @@
             {% for material in materiales %}
             <tr id="fila-material-{{ material.id }}">
                 <td>{{ material.material }}</td>
-                <td>{{ material.valor }}$</td>
+                <td>{{ material.valor }}MXN$</td>
                 <td>
                     <button class="btn edit" onclick="mostrarFormularioInline('material', '{{ material.id }}')">Editar</button>
                     <form method="POST" style="display:inline;">
