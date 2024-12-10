@@ -1,7 +1,7 @@
 table {
     margin: 0 auto;
     border-collapse: collapse;
-    width: 90%;
+    width: 100%;
 }
 
 th, td {
@@ -43,6 +43,9 @@ tr:hover {
 .btn.cancel { background-color: #f44336; }
 
 .btn.save { background-color: #4CAF50; }
+.btn.save:hover { background-color: #3e9741; }
+
+
 
 /* Form styles */
 .hidden { display: none; }

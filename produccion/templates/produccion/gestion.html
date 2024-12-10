@@ -9,13 +9,13 @@
     <table>
         <thead>
             <tr>
-                <th>Marca</th>
-                <th>Tipo</th>
-                <th>Color</th>
-                <th>Unidades</th>
-                <th>Gramos Restantes</th>
-                <th>Valor/Kg</th>
-                <th>Acciones</th>
+                <th style="text-align: center;">Marca</th>
+                <th style="text-align: center;">Tipo</th>
+                <th style="text-align: center;">Color</th>
+                <th style="text-align: center;">Unidades</th>
+                <th style="text-align: center;">Gramos Restantes</th>
+                <th style="text-align: center;">Valor/Kg</th>
+                <th style="text-align: center; width: 18%; white-space: nowrap;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -63,18 +63,21 @@
     <table>
         <thead>
             <tr>
-                <th>Material</th>
-                <th>Valor</th>
-                <th>Acciones</th>
+                <th style="text-align: center;">Material</th>
+                <th style="text-align: center;">Valor</th>
+                <th style="text-align: center; width: 18%; white-space: nowrap;">Acciones</th> <!-- Ajustamos el ancho -->
             </tr>
         </thead>
         <tbody>
             {% for material in materiales %}
             <tr id="fila-material-{{ material.id }}">
                 <td>{{ material.material }}</td>
-                <td>{{ material.valor }}MXN$</td>
+                <td>{{ material.valor }} MXN$</td>
                 <td>
+                    <!-- Botón de Editar -->
                     <button class="btn edit" onclick="mostrarFormularioInline('material', '{{ material.id }}')">Editar</button>
+
+                    <!-- Botón de Eliminar -->
                     <form method="POST" style="display:inline;">
                         {% csrf_token %}
                         <input type="hidden" name="material_id" value="{{ material.id }}">
@@ -86,10 +89,13 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Botón de agregar material -->
     <div style="text-align: center;">
         <button class="btn add" onclick="mostrarFormulario('material-form', 'tabla-materiales')">Agregar Material</button>
     </div>
 </div>
+
 
 <!-- FORMULARIO DE MATERIAL -->
 <div id="material-form" class="hidden">

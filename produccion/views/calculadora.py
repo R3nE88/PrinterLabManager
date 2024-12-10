@@ -12,9 +12,6 @@ def calculadora_produccion(request, context):
 
     # Procesar formularios
     if request.method == 'POST':
-        if "recalcular" in request.POST:
-            return recalcular(request)
-
         if "nuevo_calculo" in request.POST and calculo_form.is_valid():
             calculo_form.save()
             return redirect('/manager/?screen=calculadora_produccion')
@@ -33,22 +30,6 @@ def calculadora_produccion(request, context):
     })
 
     return render(request, 'produccion/manager.html', context)
-    
-def recalcular(request):
-    calculo_id = request.POST.get("calculo_id")
-    calculo = get_object_or_404(Calculo, id=calculo_id)
-
-    print(calculo.filamento)
-
-    calculo_form = CalculoForm(request.POST, instance=calculo)
-    print(request.POST)
-    if calculo_form.is_valid():
-        print("valido")
-    else:   
-        print("no valido")
-
-    return redirect('/manager/?screen=calculadora_produccion')
-
 
 def editar_calculo(request):
     calculo_id = request.POST.get("calculo_id")

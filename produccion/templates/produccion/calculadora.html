@@ -12,13 +12,13 @@
     <table>
         <thead>
             <tr>
-                <th>Fecha</th>
-                <th>Producto</th>
-                <th>Filamento</th>
-                <th>Peso</th>
-                <th>Tiempo</th>
-                <th>Costo</th>
-                <th>Acciones</th>
+                <th style="text-align: center;">Fecha</th>
+                <th style="text-align: center;">Producto</th>
+                <th style="text-align: center;">Filamento</th>
+                <th style="text-align: center;">Peso</th>
+                <th style="text-align: center;">Tiempo</th>
+                <th style="text-align: center;">Costo</th>
+                <th style="text-align: center; width: 18%; white-space: nowrap;">Acciones</th>
             </tr>
         </thread>
         <tbody>
@@ -30,32 +30,55 @@
                     <td>{{ calculo.peso }}g</td>
                     <td>{{ calculo.tiempo }} minutos</td>
                     <td class="costo" data-costo-dlls="{{ calculo.costo }}">{{ calculo.costo }} Dlls$</td>
-                    <td>
-                        <button class="btn edit" onclick="mostrarFormularioInline('calculo', '{{ calculo.id }}')">Editar</button>
-                        <form method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
-                            <button type="submit" name="eliminar_calculo" class="btn delete">Eliminar</button>
-                        </form>
-                        <form method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
-                            <input type="hidden" name="peso" value="{{ calculo.peso }}">
-                            <input type="hidden" name="tiempo" value="{{ calculo.tiempo }}">
-                            <input type="hidden" name="producto" value="{{ calculo.producto }}">
-                            <select name="filamento" style="display: none;">
-                                {% for filamento in filamentos %}
-                                    <option value="{{ filamento.id }}" {% if filamento.id == calculo.filamento.id %}selected{% endif %}>
-                                        {{ filamento.marca|default:"(vacío)" }} {{filamento.tipo}} {{filamento.color}}
-                                    </option>
-                                {% endfor %}
-                            </select>
+                    <td style="text-align: center;">
+
+                        <!-- Contenedor para los botones superiores -->
+                        <div style="display: flex; justify-content: center; gap: 10px;">
+
+                            <!-- Botón de Editar -->
+                            <button class="btn edit" onclick="mostrarFormularioInline('calculo', '{{ calculo.id }}')">Editar</button>
                             
-                            <button type="submit" name="editar_calculo" class="btn save">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                        </form>
+                            <!-- Botón de Eliminar -->
+                            <form method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
+                                <button type="submit" name="eliminar_calculo" class="btn delete">Eliminar</button>
+                            </form>
+                            
+                            <!-- Botón de Recargar -->
+                            <form method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
+                                <input type="hidden" name="peso" value="{{ calculo.peso }}">
+                                <input type="hidden" name="tiempo" value="{{ calculo.tiempo }}">
+                                <input type="hidden" name="producto" value="{{ calculo.producto }}">
+                                <select name="filamento" style="display: none;">
+                                    {% for filamento in filamentos %}
+                                        <option value="{{ filamento.id }}" {% if filamento.id == calculo.filamento.id %}selected{% endif %}>
+                                            {{ filamento.marca|default:"(vacío)" }} {{filamento.tipo}} {{filamento.color}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" name="editar_calculo" class="btn save">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>                            
+                            </form>
+                        </div>
+                    
+                        <!-- Contenedor para el botón inferior -->
+                        <div style="text-align: center;">
+
+                            <!-- Botón de Mandar a produccion -->
+                            <form method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" name="eliminar_calculo" class="btn add" style="width: 200px;">
+                                    Mandar a producir  
+                                    <i style="padding-left: 10px;" class="fas fa-forward"></i>
+                                </button>
+                            </form>
+                        </div>
                     </td>
+                    
                 </tr>
             {% include "produccion/partials/form_editar_calculo.html" %}
             {% endfor %}
@@ -78,11 +101,6 @@
 </div>
 
 <script>
-    function calcular(){
-
-    }
-
-
     let enDolares = true; // Estado inicial: mostrar en dólares
     const tipoCambio = 20.30; // Tipo de cambio: 1 USD = 20 MXN
 
