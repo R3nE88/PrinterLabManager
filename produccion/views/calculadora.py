@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from produccion.models import Calculo, Filamento
-from produccion.forms import CalculoForm
+from produccion.forms import CalculoForm, CalculoFormEdit, ProduccionForm
+from datetime import date
 
 def calculadora_produccion(request, context):
     # Obtener datos
@@ -12,6 +13,9 @@ def calculadora_produccion(request, context):
 
     # Procesar formularios
     if request.method == 'POST':
+        if "recalcular" in request.POST:
+            return recalcular(request)
+
         if "nuevo_calculo" in request.POST and calculo_form.is_valid():
             calculo_form.save()
             return redirect('/manager/?screen=calculadora_produccion')
@@ -21,6 +25,9 @@ def calculadora_produccion(request, context):
         
         if "eliminar_calculo" in request.POST:
             return eliminar_calculo(request)
+        
+        if "mandar_a_produccion" in request.POST:
+            return mandar_a_produccion(request)
 
     # Actualizar el contexto y renderizar
     context.update({
@@ -30,12 +37,44 @@ def calculadora_produccion(request, context):
     })
 
     return render(request, 'produccion/manager.html', context)
+    
+def mandar_a_produccion(request):
+    # Obtener cálculo relacionado
+    calculo_id = request.POST.get("calculo_id")
+    calculo = get_object_or_404(Calculo, id=calculo_id)
+    
+    # Procesar formulario de Producción
+    form = ProduccionForm(request.POST)
+    if form.is_valid():
+        produccion = form.save(commit=False)
+        # Llenar datos de cálculo en el modelo de Producción
+        produccion.fecha = date.today()
+        produccion.producto = calculo.producto
+        produccion.peso = calculo.peso
+        produccion.tiempo = calculo.tiempo
+        produccion.costo = calculo.costo
+        produccion.save()
+        
+        # Eliminar cálculo una vez procesado
+        calculo.delete()
+        
+        return redirect('/manager/?screen=control_produccion')
 
-def editar_calculo(request):
+def recalcular(request):
     calculo_id = request.POST.get("calculo_id")
     calculo = get_object_or_404(Calculo, id=calculo_id)
 
-    calculo_form = CalculoForm(request.POST, instance=calculo)
+    calculo_form = CalculoFormEdit(request.POST, instance=calculo)
+    if calculo_form.is_valid():
+        calculo_form.save()
+        return redirect('/manager/?screen=calculadora_produccion')
+
+def editar_calculo(request):
+    print(request.body)
+    calculo_id = request.POST.get("calculo_id")
+    calculo = get_object_or_404(Calculo, id=calculo_id)
+
+    calculo_form = CalculoFormEdit(request.POST, instance=calculo)
     if calculo_form.is_valid():
         calculo_form.save()
         return redirect('/manager/?screen=calculadora_produccion')

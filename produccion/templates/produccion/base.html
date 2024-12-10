@@ -17,6 +17,11 @@
             display: flex;
             flex-direction: row; /* Organiza el contenido en filas */
         }
+
+        hr {
+            border: 1px solid #00000079; /* Color y grosor */
+            margin: 20px 0; /* Espaciado arriba y abajo */
+        }
     
         .content {
             flex: 1; /* Ocupa todo el espacio disponible en el lado izquierdo */
@@ -94,12 +99,16 @@
     <div class="sidebar">
         <img src="{% static 'produccion/logo.png' %}" alt="Logo" class="logo" width="100">
         <div class="nav-buttons">
-            <a href="/manager?screen=calculadora_produccion"><button>Calculadora de Producción</button></a>
-            <a href="/manager?screen=control_produccion"><button>Control de Producción</button></a>
-            <a href="/manager?screen=gestion_materiales"><button>Gestión de Materiales</button></a>
-            <a href="/manager?screen=control_ingresos_egresos"><button>Control de Ingresos y Egresos</button></a>
             <a href="/manager?screen=pedidos"><button>Pedidos</button></a>
-            <a href="/manager?screen=precios"><button>Precios</button></a>
+            <a href="/manager?screen=calculadora_produccion"><button>Preproducción</button></a>
+            <a href="/manager?screen=control_produccion"><button>Producción</button></a>
+            <a href="/manager?screen=precios"><button>PostProducción</button></a>
+
+            <hr>
+
+            <a href="/manager?screen=control_ingresos_egresos"><button>Control de Ingresos y Egresos</button></a>
+            <a href="/manager?screen=gestion_materiales"><button>Gestión de Materiales</button></a>
+            
         </div>
     </div>
     <div class="content">

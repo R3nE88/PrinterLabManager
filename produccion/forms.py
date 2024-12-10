@@ -1,5 +1,5 @@
 from django import forms
-from .models import Filamento, Material, Calculo
+from .models import Filamento, Material, Calculo, Produccion
 from datetime import date
 
 class FilamentoForm(forms.ModelForm):
@@ -13,7 +13,6 @@ class FilamentoForm(forms.ModelForm):
             'color': 'Color',
             'restante': 'Restante(gramos)',
             'valor': 'Valor en dolar'
-
         }
 
 class MaterialForm(forms.ModelForm):
@@ -25,13 +24,23 @@ class MaterialForm(forms.ModelForm):
             'valor': 'Valor en pesos'
         }
 
-'''
-class CalculoForm(forms.ModelForm):
+class CalculoFormEdit(forms.ModelForm): #no recalcula la fecha
     class Meta:
         model = Calculo
-        fields = ['fecha', 'producto', 'filamento', 'peso', 'tiempo', 'costo']
-        '''
+        fields = ['producto', 'filamento', 'peso', 'tiempo', 'fecha']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['filamento'].queryset = Filamento.objects.all()
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        filamento = self.cleaned_data['filamento']
+        instance.costo = round(filamento.valor / 1000 * self.cleaned_data['peso'], 2)
+        if commit:
+            instance.save()
+        return instance
+       
 class CalculoForm(forms.ModelForm):
     class Meta:
         model = Calculo
@@ -55,3 +64,22 @@ class CalculoForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+#class MandarAProduccionForm(forms.modelForm):
+
+ 
+class ProduccionForm(forms.ModelForm):
+    class Meta:
+        model = Produccion
+        fields = ['cantidad', 'valor']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        print(instance.valor)
+        print(instance.valor / 20.30)
+        instance.valor = round(instance.valor / 20.30, 5)
+        if commit:
+            instance.save()
+        return instance
+    
+    #PRECIO DEL DOLAR AQUI

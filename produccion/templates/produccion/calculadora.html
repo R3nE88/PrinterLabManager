@@ -39,7 +39,7 @@
                             <button class="btn edit" onclick="mostrarFormularioInline('calculo', '{{ calculo.id }}')">Editar</button>
                             
                             <!-- Botón de Eliminar -->
-                            <form method="POST" style="display:inline;">
+                            <form method="POST" style="display:inline;" onsubmit="return confirmarEliminacion();">
                                 {% csrf_token %}
                                 <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
                                 <button type="submit" name="eliminar_calculo" class="btn delete">Eliminar</button>
@@ -48,6 +48,7 @@
                             <!-- Botón de Recargar -->
                             <form method="POST" style="display:inline;">
                                 {% csrf_token %}
+                                <input type="hidden" name="fecha" value="{{ calculo.fecha|date:"Y-m-d" }}">
                                 <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
                                 <input type="hidden" name="peso" value="{{ calculo.peso }}">
                                 <input type="hidden" name="tiempo" value="{{ calculo.tiempo }}">
@@ -59,7 +60,7 @@
                                         </option>
                                     {% endfor %}
                                 </select>
-                                <button type="submit" name="editar_calculo" class="btn save">
+                                <button type="submit" name="recalcular" class="btn save">
                                     <i class="fas fa-sync-alt"></i>
                                 </button>                            
                             </form>
@@ -68,14 +69,11 @@
                         <!-- Contenedor para el botón inferior -->
                         <div style="text-align: center;">
 
-                            <!-- Botón de Mandar a produccion -->
-                            <form method="POST" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" name="eliminar_calculo" class="btn add" style="width: 200px;">
-                                    Mandar a producir  
-                                    <i style="padding-left: 10px;" class="fas fa-forward"></i>
-                                </button>
-                            </form>
+                            <!-- Botón de Mandar a Producción -->
+                            <button type="button" class="btn add" style="width: 200px;" onclick="abrirModal('{{ calculo.id }}')">
+                                Mandar a producir  
+                                <i style="padding-left: 10px;" class="fas fa-forward"></i>
+                            </button>
                         </div>
                     </td>
                     
@@ -84,6 +82,28 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Modal -->
+    <div id="modal-produccion" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal()">&times;</span>
+            <h3>Completar Producción</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="calculo_id" id="calculo-id-modal">
+                <div>
+                    <label for="cantidad">Unidades por produccir:</label>
+                    <input type="number" name="cantidad" id="cantidad" required>
+                </div>
+                <div style="padding:25px;">
+                    <label for="valor">Precio de venta total MXN$:</label>
+                    <input type="number" name="valor" id="valor" step="0.01" required>
+                </div>
+                <button type="submit" name="mandar_a_produccion" class="btn save">Enviar a Producción</button>
+            </form>
+        </div>
+    </div>
+
     <div style="text-align: center;">
         <button class="btn add" onclick="mostrarFormulario('calculo-form', 'tabla-calculadora')">Agregar Filamento</button>
     </div>
@@ -101,6 +121,11 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("La página ha sido cargada");
+        cambiarMoneda();
+    });
+
     let enDolares = true; // Estado inicial: mostrar en dólares
     const tipoCambio = 20.30; // Tipo de cambio: 1 USD = 20 MXN
 
@@ -194,5 +219,24 @@
     
         return false;  // Evitar el envío del formulario si solo quieres actualizar la fila
     }
+
+    function abrirModal(calculoId) {
+        // Mostrar el modal
+        document.getElementById('modal-produccion').style.display = 'block';
+        // Rellenar el ID del cálculo en el formulario
+        document.getElementById('calculo-id-modal').value = calculoId;
+    }
+    
+    function cerrarModal() {
+        // Ocultar el modal
+        document.getElementById('modal-produccion').style.display = 'none';
+    }
+
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas cancelar esta preproducción?");
+    }
 </script>
 {% endblock %}
+
+
+<!-- PRECIO DEL DOLAR AQUI ARRIBA -->

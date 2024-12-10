@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .gestion import gestionar_materiales
 from .calculadora import calculadora_produccion
+from .control import control_produccion
 
 # Vista principal del manager
 def manager(request):
@@ -10,8 +11,10 @@ def manager(request):
     # Delegar el manejo de cada pantalla
     if screen == "gestion_materiales":
         return gestionar_materiales(request, context)
+    
+    if screen == "control_produccion":
+        return control_produccion(request, context)
 
-    # Otras pantallas
     if screen == "calculadora_produccion":
         return calculadora_produccion(request, context)
 

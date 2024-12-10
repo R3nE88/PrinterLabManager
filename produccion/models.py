@@ -28,3 +28,15 @@ class Calculo(models.Model):
 
     def __str__(self):
         return self.producto
+    
+class Produccion(models.Model):
+    fecha = models.DateField()
+    producto = models.CharField(max_length=100)
+    peso = models.IntegerField()
+    tiempo = models.IntegerField()
+    costo = models.FloatField(max_length=10)
+    cantidad = models.IntegerField()
+    valor = models.FloatField(max_length=10)
+
+    def __str__(self):
+        return self.producto

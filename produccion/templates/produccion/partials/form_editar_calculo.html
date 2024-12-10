@@ -4,6 +4,7 @@
         <form method="POST" class="form-inline" onsubmit="return actualizarFila('calculo', {{ calculo.id }})">
             {% csrf_token %}
             <input type="hidden" name="calculo_id" value="{{ calculo.id }}">
+            <input type="hidden" name="fecha" value="{{ calculo.fecha|date:"Y-m-d" }}">
 
             <label>Producto: <input type="text" name="producto" value="{{ calculo.producto }}"></label>
             <label>Filamento:

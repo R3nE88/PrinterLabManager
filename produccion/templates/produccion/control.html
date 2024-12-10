@@ -1,3 +1,85 @@
 {% block content %}
-<h1>Control de Producción</h1>
+{% load static %}
+<link rel="stylesheet" href="{% static 'produccion/estilos.css' %}">
+
+
+<!-- TABLA DE Calculadora -->
+<h1 style="display: inline-block; margin-right: 20px;">Control de Producción</h1>
+<button style="display: inline-block;" class="btn money" id="columna-costo" onclick="cambiarMoneda()">Dlls$</button>
+
+<div id="tabla-produccion">
+    <table>
+        <thead>
+            <tr>
+                <th style="text-align: center; width: 12%">Fecha</thr>
+                <th style="text-align: center;">Producto</thr>
+                <th style="text-align: center; width: 8%">Peso</thr>
+                <th style="text-align: center; width: 10%">Tiempo Estimado</thr>
+                <th style="text-align: center; width: 13%">Costo</thr>
+                <th style="text-align: center; width: 7%">Unidades</thr>
+                    <th style="text-align: center; width: 13%">Precio de venta Total TODO: quitar esto y pasarlo a postproduccion</thr>
+                <th style="text-align: center; width: 18%; white-space: nowrap;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for produccion in producciones %}
+                <tr id="fila-calculo-{{ calculo.id }}">
+                    <td>{{ produccion.fecha }}</td>
+                    <td>{{ produccion.producto }}</td>
+                    <td>{{ produccion.peso }}g</td>
+                    <td>{{ produccion.tiempo }} m</td>
+                    <td class="costo" data-costo-dlls="{{ produccion.costo }}">{{ produccion.costo }} Dlls$</td>
+                    <td>{{ produccion.cantidad }}</td>
+                    <td class="costo" data-costo-dlls="{{ produccion.valor }}">{{ produccion.valor }} Dlls$</td>
+                    <td style="text-align: center;">
+
+                        <!-- Botón de Eliminar -->
+                        <form method="POST" style="display:inline;" onsubmit="return confirmarEliminacion();">
+                            {% csrf_token %}
+                            <input type="hidden" name="produccion_id" value="{{ produccion.id }}">
+                            <button type="submit" name="eliminar_produccion" class="btn delete">Cancelar</button>
+                        </form>
+                        
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        console.log("La página ha sido cargada");
+        cambiarMoneda();
+    });
+
+    let enDolares = true; // Estado inicial: mostrar en dólares
+    const tipoCambio = 20.30; // Tipo de cambio: 1 USD = 20 MXN
+
+    function cambiarMoneda() {
+        enDolares = !enDolares; // Cambia el estado
+        const celdasCosto = document.querySelectorAll('.costo');
+        
+        celdasCosto.forEach(celda => {
+            const costoDolares = parseFloat(celda.getAttribute('data-costo-dlls'));
+            if (enDolares) {
+                celda.textContent = `${costoDolares.toFixed(2)} Dlls$`;
+            } else {
+                const costoPesos = costoDolares * tipoCambio;
+                celda.textContent = `${costoPesos.toFixed(2)} MXN$`;
+            }
+        });
+
+        // Actualiza el encabezado para reflejar el estado actual
+        const columnaCosto = document.getElementById('columna-costo');
+        columnaCosto.textContent = enDolares 
+            ? 'Dlls$' 
+            : 'MXN$';
+    }
+    
+    function confirmarEliminacion() {
+        return confirm("¿Estás seguro de que deseas cancelar esta producción?");
+    }
+</script>
+
 {% endblock %}
