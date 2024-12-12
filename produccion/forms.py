@@ -1,5 +1,5 @@
 from django import forms
-from .models import Filamento, Material, Calculo, Produccion
+from .models import Filamento, Material, Calculo, Produccion, PostProduccion
 from datetime import date
 
 class FilamentoForm(forms.ModelForm):
@@ -64,22 +64,20 @@ class CalculoForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
-
-#class MandarAProduccionForm(forms.modelForm):
-
  
 class ProduccionForm(forms.ModelForm):
     class Meta:
         model = Produccion
-        fields = ['cantidad', 'valor']
+        fields = ['cantidad']
+
+class PostProduccionForm(forms.ModelForm):
+    class Meta:
+        model = PostProduccion
+        fields = ['tiempo', 'valor']
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-        print(instance.valor)
-        print(instance.valor / 20.30)
         instance.valor = round(instance.valor / 20.30, 5)
         if commit:
             instance.save()
         return instance
-    
-    #PRECIO DEL DOLAR AQUI

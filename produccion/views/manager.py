@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .gestion import gestionar_materiales
 from .calculadora import calculadora_produccion
 from .control import control_produccion
+from .venta import venta
 
 # Vista principal del manager
 def manager(request):
@@ -17,6 +18,9 @@ def manager(request):
 
     if screen == "calculadora_produccion":
         return calculadora_produccion(request, context)
+    
+    if screen == "venta":
+        return venta(request, context)
 
     # Pantalla por defecto
     return render(request, 'produccion/manager.html', context)

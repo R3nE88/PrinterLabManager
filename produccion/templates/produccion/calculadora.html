@@ -87,25 +87,25 @@
     <div id="modal-produccion" class="modal">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal()">&times;</span>
-            <h3>Completar Producción</h3>
+            <h3>Comenzar Producción</h3>
             <form method="POST">
                 {% csrf_token %}
                 <input type="hidden" name="calculo_id" id="calculo-id-modal">
-                <div>
+                <div style="padding:15px;">
                     <label for="cantidad">Unidades por produccir:</label>
                     <input type="number" name="cantidad" id="cantidad" required>
                 </div>
-                <div style="padding:25px;">
+                <!-- <div style="padding:25px;">
                     <label for="valor">Precio de venta total MXN$:</label>
                     <input type="number" name="valor" id="valor" step="0.01" required>
-                </div>
+                </div> -->
                 <button type="submit" name="mandar_a_produccion" class="btn save">Enviar a Producción</button>
             </form>
         </div>
     </div>
 
     <div style="text-align: center;">
-        <button class="btn add" onclick="mostrarFormulario('calculo-form', 'tabla-calculadora')">Agregar Filamento</button>
+        <button class="btn add" onclick="mostrarFormulario('calculo-form', 'tabla-calculadora')">Agregar Producto</button>
     </div>
 </div>
 

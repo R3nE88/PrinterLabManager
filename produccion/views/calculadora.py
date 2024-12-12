@@ -50,6 +50,7 @@ def mandar_a_produccion(request):
         # Llenar datos de cálculo en el modelo de Producción
         produccion.fecha = date.today()
         produccion.producto = calculo.producto
+        produccion.filamento = calculo.filamento
         produccion.peso = calculo.peso
         produccion.tiempo = calculo.tiempo
         produccion.costo = calculo.costo

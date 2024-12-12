@@ -3,11 +3,12 @@
 <link rel="stylesheet" href="{% static 'produccion/estilos.css' %}">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+
 <!-- TABLA DE Calculadora -->
-<h1 style="display: inline-block; margin-right: 20px;">Control de Producción</h1>
+<h1 style="display: inline-block; margin-right: 20px;">Listo para venta</h1>
 <button style="display: inline-block;" class="btn money" id="columna-costo" onclick="cambiarMoneda()">Dlls$</button>
 
-<div id="tabla-produccion">
+<div id="tabla-venta">
     <table>
         <thead>
             <tr>
@@ -16,38 +17,38 @@
                 <th style="text-align: center;">Producto</thr>
                 <th style="text-align: center; white-space: nowrap;">Filamento</thr>
                 <th style="text-align: center; width: 6%">Peso</thr>
-                <th style="text-align: center; width: 10%">Tiempo Estimado</thr>
+                <th style="text-align: center; width: 10%">Tiempo Impreso</thr>
                 <th style="text-align: center; white-space: nowrap;">Costo</thr>
-               <!-- <th style="text-align: center; width: 13%">Precio de venta Total</thr> --> 
+                <th style="text-align: center; white-space: nowrap;">Valor</thr>
                 <th style="text-align: center; width: 12%; white-space: nowrap;">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {%for produccion in producciones %}
-                <tr id="fila-produccion-{{ produccion.id }}">
-                    <td>{{ produccion.fecha }}</td>
-                    <td style="text-align: center;">{{ produccion.cantidad }}</td>
-                    <td>{{ produccion.producto }}</td>
-                    <td>{{ produccion.filamento }}</td>
-                    <td style="text-align: center;">{{ produccion.peso }}g</td>
-                    <td style="text-align: center;">{{ produccion.tiempo }} m</td>
-                    <td class="costo" data-costo-dlls="{{ produccion.costo }}">{{ produccion.costo }}Dlls$</td>
-                    <!-- <td class="costo" data-costo-dlls="{{ produccion.valor }}">{{ produccion.valor }} Dlls$</td> -->
+            {%for postproduccion in postproducciones %}
+                <tr id="fila-postproduccion-{{ postproduccion.id }}">
+                    <td>{{ postproduccion.fecha }}</td>
+                    <td style="text-align: center;">{{ postproduccion.cantidad }}</td>
+                    <td>{{ postproduccion.producto }}</td>
+                    <td>{{ postproduccion.filamento }}</td>
+                    <td style="text-align: center;">{{ postproduccion.peso }}g</td>
+                    <td style="text-align: center;">{{ postproduccion.tiempo }} m</td>
+                    <td style="text-align: center; " class="costo" data-costo-dlls="{{ postproduccion.costo }}">{{ postproduccion.costo }}Dlls$</td>
+                    <td style="text-align: center; " class="costo" data-costo-dlls="{{ postproduccion.valor }}">{{ postproduccion.valor }} Dlls$</td>
                     <td style="text-align: center;">
 
                         <!-- Botón de Eliminar -->
                         <form method="POST" style="display:inline;" onsubmit="return confirmarEliminacion();">
                             {% csrf_token %}
-                            <input type="hidden" name="produccion_id" value="{{ produccion.id }}">
-                            <button type="submit" name="eliminar_produccion" class="btn delete">Cancelar</button>
+                            <input type="hidden" name="postproduccion_id" value="{{ postproduccion.id }}">
+                            <button type="submit" name="eliminar_postproduccion" class="btn delete">Eliminar</button>
                         </form>
 
                         <!-- Botón de Finalizar -->
-                        <button type="button" class="btn add" onclick="abrirModal('{{ produccion.id }}')">
-                            Finalizar
-                            <i style="padding-left: 7px;" class="fas fa-forward"></i>
-                        </button>
-                        
+                        <button type="button" class="btn money" onclick="abrirModal('{{ postproduccion.id }}')">
+                            Vender
+                            <i style="padding-left: 7px;" class="fas fa-money-bill-wave"></i>
+                        </button>   
+
                     </td>
                 </tr>
             {% endfor %}
@@ -55,22 +56,22 @@
     </table>
 
     <!-- Modal -->
-    <div id="modal-produccion" class="modal">
+    <div id="modal-venta" class="modal">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal()">&times;</span>
-            <h3>Completar Producción</h3>
+            <h3>Vender producto</h3>
             <form method="POST">
                 {% csrf_token %}
-                <input type="hidden" name="produccion_id" id="produccion-id-modal">
+                <input type="hidden" name="postproduccion_id" id="postproduccion-id-modal">
                 <div style="padding:10px;">
-                    <label for="valor">Tiempo de impresion por unidad (Minutos)</label>
-                    <input type="number" name="tiempo" id="tiempo" step="0.01" required>
+                    <label for="valor">Unidades vendidas</label>
+                    <input type="number" name="unidades" id="unidades" step="0.01" required>
                 </div>
                 <div style="padding:10px;">
-                    <label for="valor">Precio de venta por unidad MXN$: (Estimado)</label>
-                    <input type="number" name="valor" id="valor" step="0.01" required>
+                    <label for="valor">Precio de venta por unidad:</label>
+                    <input type="number" name="precio" id="precio" step="0.01" required>
                 </div>
-                <button type="submit" name="mandar_a_venta" class="btn save">Terminar Producción</button>
+                <button type="submit" name="registrar_venta" class="btn save">Vender</button>
             </form>
         </div>
     </div>
@@ -85,7 +86,7 @@
 
     let enDolares = true; // Estado inicial: mostrar en dólares
     const tipoCambio = 20.30; // Tipo de cambio: 1 USD = 20 MXN
-
+    
     function cambiarMoneda() {
         enDolares = !enDolares; // Cambia el estado
         const celdasCosto = document.querySelectorAll('.costo');
@@ -108,20 +109,20 @@
     }
 
 
-    function abrirModal(produccionId) {
+    function abrirModal(postproduccionId) {
         // Mostrar el modal
-        document.getElementById('modal-produccion').style.display = 'block';
+        document.getElementById('modal-venta').style.display = 'block';
         // Rellenar el ID del cálculo en el formulario
-        document.getElementById('produccion-id-modal').value = produccionId;
+        document.getElementById('postproduccion-id-modal').value = postproduccionId;
     }
     
     function cerrarModal() {
         // Ocultar el modal
-        document.getElementById('modal-produccion').style.display = 'none';
+        document.getElementById('modal-venta').style.display = 'none';
     }
-    
+
     function confirmarEliminacion() {
-        return confirm("¿Estás seguro de que deseas cancelar esta producción?");
+        return confirm("¿Estás seguro de que deseas cancelar esta venta?");
     }
 </script>
 
